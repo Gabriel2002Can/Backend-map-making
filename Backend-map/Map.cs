@@ -1,6 +1,6 @@
 namespace Backend_map
 {
-    public class WeatherForecast
+    public class Map
     {
         public DateOnly Date { get; set; }
 
