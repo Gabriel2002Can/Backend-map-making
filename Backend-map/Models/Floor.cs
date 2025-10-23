@@ -6,6 +6,8 @@ namespace Backend_map.Models
     {
         public int Id { get; set; }
 
+        public string Name { get; set; } = string.Empty;
+
         // The number of the floor
         public int Number { get; set; }
 

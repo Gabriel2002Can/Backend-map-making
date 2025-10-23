@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend_map.Data;
 using Backend_map.Models;
 
-namespace Backend_map
+namespace Backend_map.Controllers
 {
     [Route("api/map")]
     [ApiController]
@@ -46,22 +46,25 @@ namespace Backend_map
             return map;
         }
 
-        // GET: api/map/5/floor/5
-        [HttpGet("{mapId}/floor/{floorNumber}")]
-        public async Task<ActionResult<Floor>> GetFloor(int mapId, int floorNumber)
+        // POST: api/map
+        [HttpPost]
+        public async Task<ActionResult<Map>> Create(string name)
         {
-            var floor = await _context.Floors
-                .Where(f => f.MapId == mapId && f.Number == floorNumber)
-                .Include(f => f.Cells)
-                .FirstOrDefaultAsync();
-
-            if (floor == null)
+            var map = new Map
             {
-                return NotFound();
+                Name = name,
+                Floors = new List<Floor>()
+            };
+
+            if (map == null)
+            {
+                return BadRequest();
             }
 
-            return floor;
-        }
+            _context.Maps.Add(map);
+            await _context.SaveChangesAsync();
 
+            return CreatedAtAction(nameof(GetMap), new { id = map.Id }, map);
+        }
     }
 }
