@@ -66,5 +66,19 @@ namespace Backend_map.Controllers
 
             return CreatedAtAction(nameof(GetMap), new { id = map.Id }, map);
         }
+
+        // DELETE: api/map/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMap(int id)
+        {
+            var map = await _context.Maps.FindAsync(id);
+            if (map == null)
+            {
+                return NotFound();
+            }
+            _context.Maps.Remove(map);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

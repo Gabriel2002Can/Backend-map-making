@@ -43,10 +43,10 @@ namespace Backend_map.Data
             );
 
             modelBuilder.Entity<Cell>().HasData(
-                new Cell { Id = 1, X = 0, Y = 0, IsFilled = false, FloorId = 1 },
-                new Cell { Id = 2, X = 0, Y = 1, IsFilled = true, FloorId = 1 },
-                new Cell { Id = 3, X = 1, Y = 0, IsFilled = false, FloorId = 1 },
-                new Cell { Id = 4, X = 1, Y = 1, IsFilled = true, FloorId = 1 }
+                new Cell { Id = 1, X = 1, Y = 1, IsFilled = false, FloorId = 1 },
+                new Cell { Id = 2, X = 1, Y = 2, IsFilled = true, FloorId = 1 },
+                new Cell { Id = 3, X = 2, Y = 1, IsFilled = false, FloorId = 1 },
+                new Cell { Id = 4, X = 2, Y = 2, IsFilled = true, FloorId = 1 }
             );
         }
 

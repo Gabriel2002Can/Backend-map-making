@@ -43,7 +43,8 @@ namespace Backend_map
         [HttpPost]
         public async Task<ActionResult<Map>> Create(FloorDTO payload)
         {
-            var layer = new Floor
+
+            var floor = new Floor
             {
                 Name = payload.Name,
                 Number = payload.Number,
@@ -53,17 +54,49 @@ namespace Backend_map
                 MapId = payload.MapId
             };
 
-            if (layer == null)
+            if (floor == null)
             {
                 return BadRequest();
             }
 
-            _context.Floors.Add(layer);
+            List<Cell> cells = new List<Cell>();
+
+            // Will create each cell for the given dimensions
+            for (int i = 0; i < floor.DimensionX; i++)
+            {
+                for (int j = 0; j < floor.DimensionY; j++)
+                {
+                    var cell = new Cell
+                    {
+                        X = i,
+                        Y = j,
+                        IsFilled = false,
+                        FloorId = floor.Id
+                    };
+                    cells.Add(cell);
+                }
+            }
+
+            floor.Cells = cells;
+
+            _context.Floors.Add(floor);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFloor), new { id = layer.Id }, layer);
+            return CreatedAtAction(nameof(GetFloor), new { id = floor.Id }, floor);
         }
 
-        
+        // DELETE: api/floor/5
+        [HttpDelete("{floorId}")]
+        public async Task<IActionResult> DeleteFloor(int floorId)
+        {
+            var floor = await _context.Floors.FindAsync(floorId);
+            if (floor == null)
+            {
+                return NotFound();
+            }
+            _context.Floors.Remove(floor);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
     }
 }

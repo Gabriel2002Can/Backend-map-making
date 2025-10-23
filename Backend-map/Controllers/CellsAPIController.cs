@@ -22,33 +22,25 @@ namespace Backend_map
             _context = context;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Cell>> Create(CellsDTO payload)
+        // Will update a List of cells considering their coordenates and their new state
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateCells(CellsDTO payload)
         {
-            List<Cell> cells = new List<Cell>(); 
-
-            foreach (var newCell in payload.Cells)
+            foreach (var cellUpdate in payload.Cells)
             {
-                var cell = new Cell
-                {
-                    X = newCell.X,
-                    Y = newCell.Y,
-                    IsFilled = newCell.IsFilled,
-                    FloorId = payload.FloorId
-                };
+                var cell = await _context.Cells
+                    .Where(c => c.FloorId == payload.FloorId && c.X == cellUpdate.X && c.Y == cellUpdate.Y)
+                    .FirstOrDefaultAsync();
 
                 if (cell != null)
                 {
-                    cells.Add(cell);
+                    cell.IsFilled = cellUpdate.IsFilled;
                 }
+
             }
 
-            _context.Cells.AddRange(cells);
             await _context.SaveChangesAsync();
-
-            var cellToReturn = cells.FirstOrDefault();
-            return CreatedAtAction("GetCell", new { cellId = cellToReturn?.Id }, cellToReturn);
+            return NoContent();
         }
-
     }
 }
