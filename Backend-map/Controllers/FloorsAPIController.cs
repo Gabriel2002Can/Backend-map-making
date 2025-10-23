@@ -39,7 +39,7 @@ namespace Backend_map
             return floor;
         }
 
-        // POST: api/layer
+        // POST: api/floor
         [HttpPost]
         public async Task<ActionResult<Map>> Create(FloorDTO payload)
         {
