@@ -4,7 +4,7 @@ using Backend_map.Data;
 using Backend_map;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Backend_mapContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Backend_mapContext") ?? throw new InvalidOperationException("Connection string 'Backend_mapContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
 // Add services to the container.
 
