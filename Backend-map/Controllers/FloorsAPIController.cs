@@ -41,7 +41,7 @@ namespace Backend_map
 
         // POST: api/floor
         [HttpPost]
-        public async Task<ActionResult<Map>> Create(FloorDTO payload)
+        public async Task<ActionResult<Map>> Create([FromBody] FloorDTO payload)
         {
 
             var floor = new Floor
@@ -71,7 +71,7 @@ namespace Backend_map
                         X = i,
                         Y = j,
                         IsFilled = false,
-                        FloorId = floor.Id
+                        // associate via navigation after creating the floor
                     };
                     cells.Add(cell);
                 }
@@ -81,7 +81,7 @@ namespace Backend_map
 
             _context.Floors.Add(floor);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFloor), new { id = floor.Id }, floor);
+            return CreatedAtAction(nameof(GetFloor), new { floorId = floor.Id }, floor);
         }
 
         // DELETE: api/floor/5

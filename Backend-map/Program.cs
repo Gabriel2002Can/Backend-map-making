@@ -13,9 +13,19 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://jolly-sky-03ee0d61e.3.azurestaticapps.net")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy
+            .WithOrigins(
+                "https://jolly-sky-03ee0d61e.3.azurestaticapps.net",
+                "http://localhost:3000",
+                "https://localhost:3000",
+                "http://localhost:4200",
+                "http://localhost:5173",
+                "http://localhost:5174"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        // If you send cookies/authorization from the frontend, uncomment the next line
+        // .AllowCredentials();
     });
 });
 
@@ -53,10 +63,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Apply CORS before endpoints
 app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireCors("AllowFrontend");
 
 app.Run();
