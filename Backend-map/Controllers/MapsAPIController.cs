@@ -67,6 +67,40 @@ namespace Backend_map.Controllers
             return CreatedAtAction(nameof(GetMap), new { id = map.Id }, map);
         }
 
+        // PUT: api/map/UpdateMap/5
+        [HttpPut]
+        [Route("updateMap/{id}")]
+        public async Task<IActionResult> EditMap(int id, [FromBody] string newName)
+        {
+            var map = await _context.Maps.FindAsync(id);
+
+            if (map == null)
+            {
+                return NotFound();
+            }
+
+            map.Name = newName;
+
+            _context.Entry(map).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Maps.Any(e => e.Id == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
         // DELETE: api/map/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMap(int id)

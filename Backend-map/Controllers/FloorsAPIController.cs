@@ -41,7 +41,7 @@ namespace Backend_map
 
         // POST: api/floor
         [HttpPost]
-        public async Task<ActionResult<Map>> Create([FromBody] FloorDTO payload)
+        public async Task<ActionResult<Map>> Create([FromBody] CreateFloorDTO payload)
         {
 
             var floor = new Floor
@@ -82,6 +82,39 @@ namespace Backend_map
             _context.Floors.Add(floor);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetFloor), new { floorId = floor.Id }, floor);
+        }
+
+        // PUT: api/floor/5
+        [HttpPut("{floorId}")]
+        public async Task<IActionResult> UpdateFloor(int floorId, [FromBody] UpdateFloorDTO payload)
+        {
+            if (payload == null) return BadRequest();
+
+            if (payload.DimensionX <= 0 || payload.DimensionY <= 0) return BadRequest("The floor dimensions should be positive values");
+
+            var floor = await _context.Floors.FindAsync(floorId);
+
+            if (floor == null)
+            {
+                return NotFound();
+            }
+
+            if (payload.Name != null) floor.Name = payload.Name;
+            if (payload.Number != null) floor.Number = (int)payload.Number;
+
+            if (payload.DimensionX != null)
+            {
+                floor.DimensionX = (int)payload.DimensionX;
+            }
+
+            if (payload.DimensionY != null) 
+            { 
+                floor.DimensionY = (int)payload.DimensionY; 
+            }
+
+            await _context.SaveChangesAsync();
+            
+            return NoContent();
         }
 
         // DELETE: api/floor/5
