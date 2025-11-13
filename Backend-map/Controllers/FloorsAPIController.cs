@@ -97,6 +97,5 @@ namespace Backend_map
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
     }
 }
