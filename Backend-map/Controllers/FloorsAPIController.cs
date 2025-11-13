@@ -104,9 +104,9 @@ namespace Backend_map
 
             if (payload.DimensionX != null && payload.DimensionY != null)
             {
+                RecalculateCells(floor, (int)payload.DimensionX, floor.DimensionY);
                 floor.DimensionX = (int)payload.DimensionX;
                 floor.DimensionY = (int)payload.DimensionY;
-                RecalculateCells(floor, (int)payload.DimensionX, floor.DimensionY);
             }
             else if (payload.DimensionX != null)
             {
@@ -124,6 +124,43 @@ namespace Backend_map
             return NoContent();
         }
 
+        // Help method to edit floor cells
+        private void RecalculateCells(Floor floor, int newX, int newY)
+        {
+            if (floor == null) return;
+
+            var cellMap = floor.Cells.ToDictionary(c => (c.X, c.Y));
+            var newCells = new List<Cell>();
+
+            // Create new cells for new dimensions
+            for (int x = 0; x < newX; x++)
+            {
+                for (int y = 0; y < newY; y++)
+                {
+                    if (!cellMap.ContainsKey((x, y)))
+                    {
+                        newCells.Add(new Cell
+                        {
+                            X = x,
+                            Y = y,
+                            IsFilled = false,
+                        });
+                    }
+                }
+            }
+
+            // Remover cells out of new bounds
+            var toRemove = floor.Cells
+                .Where(c => c.X >= newX || c.Y >= newY)
+                .ToList();
+
+            if (toRemove.Any())
+                _context.Cells.RemoveRange(toRemove);
+
+            if (newCells.Any())
+                _context.Cells.AddRange(newCells);
+        }
+
         // DELETE: api/floor/5
         [HttpDelete("{floorId}")]
         public async Task<IActionResult> DeleteFloor(int floorId)
@@ -136,77 +173,6 @@ namespace Backend_map
             _context.Floors.Remove(floor);
             await _context.SaveChangesAsync();
             return NoContent();
-        }
-
-        // Help method to edit floor cells
-        private void RecalculateCells(Floor floor, int newX, int newY)
-        {
-            List<Cell> cells = new List<Cell>();
-
-            if (floor == null) return;
-
-            if (floor.DimensionX < newX) {
-                for (int x = floor.DimensionX; x < floor.DimensionY; x++)
-                {
-                    for (int y = 0; y < newY; y++)
-                    {
-                        var newCell = new Cell
-                        {
-                            Y = y,
-                            X = x,
-                            IsFilled = false,
-                        };
-                        cells.Add(newCell);
-                    }
-                }
-                floor.Cells = [.. floor.Cells, .. cells];
-            }
-            else if (floor.DimensionX > newX) {
-                for (int x = newX; x < floor.DimensionX; x++)
-                {
-                    for (int y = 0; y < floor.DimensionY; y++)
-                    {
-                        var cellToRemove = floor.Cells.FirstOrDefault(c => c.X == x && c.Y == y);
-                        if (cellToRemove != null)
-                        {
-                            _context.Cells.Remove(cellToRemove);
-                        }
-                    }
-                }
-
-            }
-
-            if (floor.DimensionY < newY)
-            {
-                for (int y = floor.DimensionY; y < newY; y++)
-                {
-                    for (int x = 0; x < newX; x++)
-                    {
-                        var newCell = new Cell
-                        {
-                            Y = y,
-                            X = x,
-                            IsFilled = false,
-                        };
-                        cells.Add(newCell);
-                    }
-                }
-                floor.Cells = [.. floor.Cells, .. cells];
-            }
-            else if (floor.DimensionY > newY)
-            {
-                for (int y = newY; y < floor.DimensionY; y++)
-                {
-                    for (int x = 0; x < floor.DimensionX; x++)
-                    {
-                        var cellToRemove = floor.Cells.FirstOrDefault(c => c.X == x && c.Y == y);
-                        if (cellToRemove != null)
-                        {
-                            _context.Cells.Remove(cellToRemove);
-                        }
-                    }
-                }
-            }
         }
     }
 }
