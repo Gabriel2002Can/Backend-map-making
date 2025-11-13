@@ -105,6 +105,7 @@ namespace Backend_map
             if (payload.DimensionX != null)
             {
                 floor.DimensionX = (int)payload.DimensionX;
+
             }
 
             if (payload.DimensionY != null) 
@@ -129,6 +130,58 @@ namespace Backend_map
             _context.Floors.Remove(floor);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        // Help method to edit floor cells
+        private void RecalculateCells(Floor floor, int newX, int newY)
+        {
+            List<Cell> cells = new List<Cell>();
+
+            if (floor == null) return;
+
+            if (floor.DimensionX > newX) {
+                for (int x = floor.DimensionX +1; x < newX; x++)
+                {
+                    for (int y = 0; y < newY; y++)
+                    {
+                        var newCell = new Cell
+                        {
+                            Y = y,
+                            X = x,
+                            IsFilled = false,
+                        };
+                    }
+                }
+            }
+            else if (floor.DimensionX < newX) {
+            
+            }
+
+            if (floor.DimensionY > newY) {
+            
+            }
+            else if (floor.DimensionY < newY) {
+            
+            }
+        }
+
+        private void addCell(Floor floor,int resizeValue, int fixedValue)
+        {
+                // Resized dimension
+                for (int resize = floor.DimensionX + 1; resize < newX; resize++)
+                {
+                    // Fixed
+                    for (int y = 0; y < newY; y++)
+                    {
+                        var newCell = new Cell
+                        {
+                            Y = y,
+                            X = x,
+                            IsFilled = false,
+                        };
+                    }
+                }
+            
         }
 
     }
