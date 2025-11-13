@@ -79,6 +79,16 @@ namespace Backend_map.Controllers
                 return NotFound();
             }
 
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                return BadRequest("Map name cannot be empty.");
+            }
+
+            if (map.Name == newName)
+            {
+                return NoContent();
+            }
+
             map.Name = newName;
 
             _context.Entry(map).State = EntityState.Modified;

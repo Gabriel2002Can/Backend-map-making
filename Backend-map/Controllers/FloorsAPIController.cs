@@ -86,7 +86,7 @@ namespace Backend_map
 
         // PUT: api/floor/5
         [HttpPut("{floorId}")]
-        public async Task<IActionResult> UpdateFloor(int floorId, [FromBody] UpdateFloorDTO payload)
+        public async Task<IActionResult> EditFloor(int floorId, [FromBody] UpdateFloorDTO payload)
         {
             if (payload == null) return BadRequest();
 
