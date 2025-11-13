@@ -102,15 +102,21 @@ namespace Backend_map
             if (payload.Name != null) floor.Name = payload.Name;
             if (payload.Number != null) floor.Number = (int)payload.Number;
 
-            if (payload.DimensionX != null)
+            if (payload.DimensionX != null && payload.DimensionY != null)
             {
                 floor.DimensionX = (int)payload.DimensionX;
-
+                floor.DimensionY = (int)payload.DimensionY;
+                RecalculateCells(floor, (int)payload.DimensionX, floor.DimensionY);
             }
-
-            if (payload.DimensionY != null) 
-            { 
-                floor.DimensionY = (int)payload.DimensionY; 
+            else if (payload.DimensionX != null)
+            {
+                RecalculateCells(floor, (int)payload.DimensionX, floor.DimensionY);
+                floor.DimensionX = (int)payload.DimensionX;
+            }
+            else if (payload.DimensionY != null)
+            {
+                RecalculateCells(floor, floor.DimensionX, (int)payload.DimensionY);
+                floor.DimensionY = (int)payload.DimensionY;
             }
 
             await _context.SaveChangesAsync();
@@ -139,8 +145,8 @@ namespace Backend_map
 
             if (floor == null) return;
 
-            if (floor.DimensionX > newX) {
-                for (int x = floor.DimensionX +1; x < newX; x++)
+            if (floor.DimensionX < newX) {
+                for (int x = floor.DimensionX; x < floor.DimensionY; x++)
                 {
                     for (int y = 0; y < newY; y++)
                     {
@@ -150,28 +156,31 @@ namespace Backend_map
                             X = x,
                             IsFilled = false,
                         };
+                        cells.Add(newCell);
                     }
                 }
+                floor.Cells = [.. floor.Cells, .. cells];
             }
-            else if (floor.DimensionX < newX) {
-            
-            }
-
-            if (floor.DimensionY > newY) {
-            
-            }
-            else if (floor.DimensionY < newY) {
-            
-            }
-        }
-
-        private void addCell(Floor floor,int resizeValue, int fixedValue)
-        {
-                // Resized dimension
-                for (int resize = floor.DimensionX + 1; resize < newX; resize++)
+            else if (floor.DimensionX > newX) {
+                for (int x = newX; x < floor.DimensionX; x++)
                 {
-                    // Fixed
-                    for (int y = 0; y < newY; y++)
+                    for (int y = 0; y < floor.DimensionY; y++)
+                    {
+                        var cellToRemove = floor.Cells.FirstOrDefault(c => c.X == x && c.Y == y);
+                        if (cellToRemove != null)
+                        {
+                            _context.Cells.Remove(cellToRemove);
+                        }
+                    }
+                }
+
+            }
+
+            if (floor.DimensionY < newY)
+            {
+                for (int y = floor.DimensionY; y < newY; y++)
+                {
+                    for (int x = 0; x < newX; x++)
                     {
                         var newCell = new Cell
                         {
@@ -179,10 +188,25 @@ namespace Backend_map
                             X = x,
                             IsFilled = false,
                         };
+                        cells.Add(newCell);
                     }
                 }
-            
+                floor.Cells = [.. floor.Cells, .. cells];
+            }
+            else if (floor.DimensionY > newY)
+            {
+                for (int y = newY; y < floor.DimensionY; y++)
+                {
+                    for (int x = 0; x < floor.DimensionX; x++)
+                    {
+                        var cellToRemove = floor.Cells.FirstOrDefault(c => c.X == x && c.Y == y);
+                        if (cellToRemove != null)
+                        {
+                            _context.Cells.Remove(cellToRemove);
+                        }
+                    }
+                }
+            }
         }
-
     }
 }
