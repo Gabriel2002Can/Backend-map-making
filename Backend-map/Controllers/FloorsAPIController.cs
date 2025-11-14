@@ -104,7 +104,7 @@ namespace Backend_map
 
             if (payload.DimensionX != null && payload.DimensionY != null)
             {
-                RecalculateCells(floor, (int)payload.DimensionX, floor.DimensionY);
+                RecalculateCells(floor, (int)payload.DimensionX, (int)payload.DimensionY);
                 floor.DimensionX = (int)payload.DimensionX;
                 floor.DimensionY = (int)payload.DimensionY;
             }
