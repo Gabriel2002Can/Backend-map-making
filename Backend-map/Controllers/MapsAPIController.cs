@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_map.Data;
 using Backend_map.Models;
+using Backend_map.DTO;
 
 namespace Backend_map.Controllers
 {
@@ -67,10 +68,10 @@ namespace Backend_map.Controllers
             return CreatedAtAction(nameof(GetMap), new { id = map.Id }, map);
         }
 
-        // PUT: api/map/UpdateMap/5
+        // PUT: api/map/5
         [HttpPut]
-        [Route("updateMap/{id}")]
-        public async Task<IActionResult> EditMap(int id, [FromBody] string newName)
+        [Route("{id}")]
+        public async Task<IActionResult> EditMap(int id, [FromBody] UpdateMapDTO payload)
         {
             var map = await _context.Maps.FindAsync(id);
 
@@ -79,17 +80,17 @@ namespace Backend_map.Controllers
                 return NotFound();
             }
 
-            if (string.IsNullOrWhiteSpace(newName))
+            if (payload == null || string.IsNullOrWhiteSpace(payload.NewName))
             {
                 return BadRequest("Map name cannot be empty.");
             }
 
-            if (map.Name == newName)
+            if (map.Name == payload.NewName)
             {
                 return NoContent();
             }
 
-            map.Name = newName;
+            map.Name = payload.NewName;
 
             _context.Entry(map).State = EntityState.Modified;
 
