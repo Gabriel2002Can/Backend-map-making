@@ -92,7 +92,9 @@ namespace Backend_map
 
             if (payload.DimensionX <= 0 || payload.DimensionY <= 0) return BadRequest("The floor dimensions should be positive values");
 
-            var floor = await _context.Floors.FindAsync(floorId);
+            var floor = await _context.Floors
+                .Include(f => f.Cells)
+                .FirstOrDefaultAsync(f => f.Id == floorId);
 
             if (floor == null)
             {
@@ -141,6 +143,7 @@ namespace Backend_map
                     {
                         newCells.Add(new Cell
                         {
+                            FloorId = floor.Id,
                             X = x,
                             Y = y,
                             IsFilled = false,
@@ -149,7 +152,7 @@ namespace Backend_map
                 }
             }
 
-            // Remover cells out of new bounds
+            // Remove cells out of new bounds
             var toRemove = floor.Cells
                 .Where(c => c.X >= newX || c.Y >= newY)
                 .ToList();
