@@ -32,11 +32,17 @@ namespace Backend_map
                     .Where(c => c.FloorId == payload.FloorId && c.X == cellUpdate.X && c.Y == cellUpdate.Y)
                     .FirstOrDefaultAsync();
 
-                if (cell != null)
+                if (cell == null) return BadRequest();
+
+                if (cellUpdate.IsFilled != null)
                 {
-                    cell.IsFilled = cellUpdate.IsFilled;
+                    cell.IsFilled = cellUpdate.IsFilled.Value;
                 }
 
+                if (cellUpdate.RoomId != null)
+                {
+                    cell.RoomId = cellUpdate.RoomId;
+                }
             }
 
             await _context.SaveChangesAsync();

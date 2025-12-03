@@ -34,7 +34,7 @@ namespace Backend_map.Controllers
         // POST: api/RoomsAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Room>> CreateRoom(CreateRoomDTO payload)
+        public async Task<ActionResult<Room>> CreateRoom(RoomDTO payload)
         {
             
             var room = new Room
@@ -54,30 +54,33 @@ namespace Backend_map.Controllers
         // PUT: api/RoomsAPI/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
+        public async Task<IActionResult> EditRoom(int id, RoomDTO payload)
         {
-            if (id != room.Id)
+
+            var room = await _context.Rooms.FindAsync(id);
+
+            if (room == null)
             {
                 return BadRequest();
             }
 
-            _context.Entry(room).State = EntityState.Modified;
 
-            try
+            if(payload.Name != null)
             {
-                await _context.SaveChangesAsync();
+                room.Name = payload.Name;
             }
-            catch (DbUpdateConcurrencyException)
+
+            if(payload.Color != null)
             {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                room.Color = payload.Color;
             }
+
+            if(payload.Description != null)
+            {
+                room.Description = payload.Description;
+            }
+
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -96,11 +99,6 @@ namespace Backend_map.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool RoomExists(int id)
-        {
-            return _context.Rooms.Any(e => e.Id == id);
         }
     }
 }

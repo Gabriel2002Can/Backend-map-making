@@ -1,6 +1,6 @@
 ﻿namespace Backend_map.DTO
 {
-    public class CreateRoomDTO
+    public class RoomDTO
     {
         public string? Name { get; set; }
         public string? Color { get; set; }
