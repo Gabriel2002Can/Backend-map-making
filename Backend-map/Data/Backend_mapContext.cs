@@ -17,6 +17,7 @@ namespace Backend_map.Data
         public DbSet<Backend_map.Models.Map> Maps { get; set; } = default!;
         public DbSet<Backend_map.Models.Floor> Floors { get; set; } = default!;
         public DbSet<Backend_map.Models.Cell> Cells { get; set; } = default!;
+        public DbSet<Backend_map.Models.Room> Rooms { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +33,12 @@ namespace Backend_map.Data
                 .HasMany(f => f.Cells)
                 .WithOne(c => c.Floor)
                 .HasForeignKey(c => c.FloorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Floor>()
+                .HasMany(f => f.Rooms)
+                .WithOne(r => r.Floor)
+                .HasForeignKey(r => r.FloorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Map>().HasData(

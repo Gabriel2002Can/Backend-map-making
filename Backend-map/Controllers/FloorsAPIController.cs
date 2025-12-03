@@ -41,7 +41,7 @@ namespace Backend_map
 
         // POST: api/floor
         [HttpPost]
-        public async Task<ActionResult<Map>> Create([FromBody] CreateFloorDTO payload)
+        public async Task<ActionResult<Map>> Create([FromBody] FloorDTO payload)
         {
 
             var floor = new Floor

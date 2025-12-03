@@ -24,7 +24,7 @@ namespace Backend_map.Controllers
 
         // GET: api/map
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Map>>> GetMap()
+        public async Task<ActionResult<IEnumerable<Map>>> GetMaps()
         {
             return await _context.Maps
                 .Include(x => x.Floors)

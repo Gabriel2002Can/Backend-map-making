@@ -1,6 +1,6 @@
 ﻿namespace Backend_map.DTO
 {
-    public class CreateFloorDTO
+    public class FloorDTO
     {
         public string Name { get; set; }
 

@@ -19,5 +19,6 @@ namespace Backend_map.Models
         public int MapId { get; set; }
 
         public ICollection<Cell> Cells { get; set; }
+        public ICollection<Room>? Rooms { get; set; }
     }
 }

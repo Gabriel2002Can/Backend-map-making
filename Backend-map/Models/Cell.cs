@@ -15,5 +15,9 @@ namespace Backend_map.Models
         public Floor Floor { get; set; }
         public int FloorId { get; set; }
 
-}
+        [JsonIgnore]
+        public Room? Room { get; set; }
+        public int? RoomId { get; set; }
+
+    }
 }
