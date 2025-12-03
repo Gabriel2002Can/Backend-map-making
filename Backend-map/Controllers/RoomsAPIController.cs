@@ -34,7 +34,7 @@ namespace Backend_map.Controllers
         // POST: api/RoomsAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Room>> CreateRoom(RoomDTO payload)
+        public async Task<ActionResult<Room>> CreateRoom(CreateRoomDTO payload)
         {
             
             var room = new Room
@@ -42,13 +42,14 @@ namespace Backend_map.Controllers
                 Name = payload.Name ?? string.Empty,
                 Color = payload.Color ?? string.Empty,
                 Description = payload.Description ?? string.Empty,
+                FloorId = payload.FloorId
             };
 
             _context.Rooms.Add(room);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            return NoContent();
         }
 
         // PUT: api/RoomsAPI/5
