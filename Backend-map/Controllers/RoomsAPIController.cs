@@ -22,7 +22,7 @@ namespace Backend_map.Controllers
             _context = context;
         }
 
-        // GET: api/RoomsAPI
+        // GET: api/room
         [HttpGet("{floorId}")]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms(int floorId)
         {
@@ -31,7 +31,7 @@ namespace Backend_map.Controllers
                 .ToListAsync();
         }
 
-        // POST: api/RoomsAPI
+        // POST: api/room
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Room>> CreateRoom(CreateRoomDTO payload)
@@ -49,10 +49,10 @@ namespace Backend_map.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return room;
         }
 
-        // PUT: api/RoomsAPI/5
+        // PUT: api/room/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> EditRoom(int id, RoomDTO payload)
@@ -86,7 +86,7 @@ namespace Backend_map.Controllers
             return NoContent();
         }
 
-        // DELETE: api/RoomsAPI/5
+        // DELETE: api/room/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
