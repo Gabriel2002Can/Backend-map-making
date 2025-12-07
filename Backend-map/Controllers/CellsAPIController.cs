@@ -39,10 +39,15 @@ namespace Backend_map
                     cell.IsFilled = cellUpdate.IsFilled.Value;
                 }
 
-                if (cellUpdate.RoomId != null)
-                {
+                if (cellUpdate.ClearRoom)
+                    cell.RoomId = null;
+                else if (cellUpdate.RoomId != null)
                     cell.RoomId = cellUpdate.RoomId;
-                }
+
+                if (cellUpdate.ClearIcon)
+                    cell.Icon = null;
+                else if (cellUpdate.Icon != null)
+                    cell.Icon = cellUpdate.Icon;
             }
 
             await _context.SaveChangesAsync();
