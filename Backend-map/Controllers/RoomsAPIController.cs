@@ -96,6 +96,15 @@ namespace Backend_map.Controllers
                 return NotFound();
             }
 
+            var cells = await _context.Cells
+                .Where(c => c.RoomId == id)
+                .ToListAsync();
+
+            foreach (var cell in cells)
+            {
+                cell.RoomId = null;
+            }
+
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 
