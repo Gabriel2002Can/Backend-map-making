@@ -14,7 +14,7 @@ The backend is a lightweight ASP.NET Core Web API that persists all map data for
 
 ## **API Resources**
 
-### 🗺️ **Maps**
+### **Maps**
 
 The top-level container for organizing your floor plans.
 
@@ -28,7 +28,7 @@ The top-level container for organizing your floor plans.
 
 ---
 
-### 🏢 **Floors**
+### **Floors**
 
 Each map can contain multiple floors representing different levels of a building.
 
@@ -48,7 +48,7 @@ Each map can contain multiple floors representing different levels of a building
 
 ---
 
-### 🔲 **Cells**
+### **Cells**
 
 The building blocks of each floor — individual grid squares that make up the layout.
 
@@ -66,7 +66,7 @@ The building blocks of each floor — individual grid squares that make up the l
 
 ---
 
-### 🏠 **Rooms**
+### **Rooms**
 
 Named areas that group multiple cells together with visual styling.
 
@@ -77,7 +77,7 @@ Named areas that group multiple cells together with visual styling.
 
 ---
 
-### 🎯 **Icons**
+### **Icons**
 
 Visual markers that can be placed on cells to indicate features.
 
@@ -127,7 +127,7 @@ Map
 ### **Prerequisites**
 
 - .NET SDK
-- SQL Server (local or Azure SQL)
+- SQL Server
 
 ### **Running the API**
 
